@@ -8,6 +8,7 @@ package InvoiceGenerator;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -81,13 +82,10 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
 
         tblSalesItem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Product Name", "Qty", "UOM", "Unit Price", "Total "
             }
         ));
         jScrollPane2.setViewportView(tblSalesItem);
@@ -113,7 +111,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lblOrderDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblShipNo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblShipFees, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+                            .addComponent(lblShipFees, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                             .addComponent(lblPrdList, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblSalesQty, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblSalesItem, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -264,8 +262,26 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         txtShipFees.setText("");
         cbPrdList.setSelectedIndex(0);
         txtSalesQty.setText("");
-        tblSalesItem.removeAll();
+        removeAllRow();
     }
+    
+    public void addToSalesTable(String prdName, String salesQty, String prdUOM, String prdUnitPrice, String totalPrice){
+        DefaultTableModel model = (DefaultTableModel) tblSalesItem.getModel();
+        model.addRow(new Object[]{prdName,salesQty,prdUOM,prdUnitPrice,totalPrice});
+    }
+    
+    public void removeAllRow(){
+        int totalRowCount = tblSalesItem.getRowCount();
+        if (totalRowCount > 0){
+            for (int i = 0; i < totalRowCount; i++){
+                DefaultTableModel model = (DefaultTableModel) tblSalesItem.getModel();
+                model.removeRow(0);
+                
+            }
+        }
+    }
+    
+    
     
     
     
