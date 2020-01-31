@@ -53,6 +53,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         tblSalesItem = new javax.swing.JTable();
         btnGenerate = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
+        btnDelete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,12 +97,14 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jLabel9.setText("Invoice Generator");
 
+        btnDelete.setText("Delete");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(394, Short.MAX_VALUE)
                 .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(357, 357, 357))
             .addGroup(layout.createSequentialGroup()
@@ -124,9 +127,12 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                                     .addComponent(txtShipFees, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addGap(36, 36, 36)
                                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtShipNo, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(InvDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(InvDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(43, 43, 43)
+                                .addComponent(btnDelete))))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
@@ -140,7 +146,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(txtOrderNo, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                                 .addComponent(txtInvoiceNo)))))
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,11 +182,17 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                     .addComponent(lblSalesQty, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSalesQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSalesItem)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(44, 44, 44)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblSalesItem)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(44, 44, 44))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDelete)
+                        .addGap(88, 88, 88)))
                 .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(263, Short.MAX_VALUE))
         );
@@ -203,6 +215,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         lblSalesItem.getAccessibleContext().setAccessibleName("lblSalesItem");
         btnGenerate.getAccessibleContext().setAccessibleName("btnGenerate");
         jLabel9.getAccessibleContext().setAccessibleName("lblTitle");
+        btnDelete.getAccessibleContext().setAccessibleName("btnDelete");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -252,6 +265,10 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     
     public void addGenerateListener(ActionListener listenForGenerateButton){
         btnGenerate.addActionListener(listenForGenerateButton);
+    }
+    
+    public void addDeleteListener(ActionListener listenForDeleteButton){
+        btnDelete.addActionListener(listenForDeleteButton);
     }
     
     public void resetForm(){
@@ -326,6 +343,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdesktop.swingx.JXDatePicker InvDatePicker;
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnGenerate;
     private javax.swing.JComboBox<String> cbPrdList;
     private javax.swing.JLabel jLabel9;

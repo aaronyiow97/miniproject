@@ -29,7 +29,7 @@ public class InvoiceGeneratorModel {
         Connection conn = null;
         try {
             Class.forName(driver);
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/DBNAME", "root", "1234");
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/chantingpines", "root", "1234");
         } catch (SQLException ex) {
             Logger.getLogger(InvoiceGeneratorModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,12 +65,29 @@ public class InvoiceGeneratorModel {
         return success;
     }
     
-    public ArrayList<String> getPrdList() throws ClassNotFoundException{
-        ResultSet rs = this.GetQuery("SELECT * FROM PRDLIST");
+    public ArrayList<String> getPrdList() throws ClassNotFoundException, SQLException{
+        ResultSet rs = this.GetQuery("SELECT * FROM product_list");
         ArrayList<String> prdList = new ArrayList<>();
         
-        
-        return prdList;
-        
+        while (rs.next()){
+            String prdcode = rs.getString("item_code");
+            String prdname = rs.getString("item_name");
+            
+            String item = prdcode + " - " + prdname;
+            prdList.add(item);
+        }
+        return prdList; 
     }
+    
+    public String getPrdUOM(String itemName, String itemCode) throws ClassNotFoundException, SQLException{
+        ResultSet rs = this.GetQuery("SELECT item_uom FROM product_list WHERE item_code = '" + itemCode + "' AND item_name = '" + itemName + "'" );
+        String UOM = "";
+        
+        while (rs.next()){
+            UOM = rs.getString("item_uom");
+        }
+        return UOM;
+    }
+    
+    
 }
