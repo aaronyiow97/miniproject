@@ -5,7 +5,8 @@
  */
 package InvoiceGenerator;
 
-import com.mysql.jdbc.Connection;
+
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,30 +20,23 @@ import java.util.logging.Logger;
  * @author Aaron
  */
 public class InvoiceGeneratorModel {
-    private static String driver = "com.mysql.jdbc.driver";
-    public InvoiceGeneratorModel(){
-        
+
+    private static String dbUrl = "jdbc:mysql://localhost:3306/chantingpines?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC";
+    private static String dbUser = "root";
+    private static String dbPwd = "";
+    
+    
+    public static Connection GetConnection() throws SQLException{
+        return DriverManager.getConnection(dbUrl, dbUser, dbPwd);
     }
     
-    public Connection GetConnection() throws ClassNotFoundException{
+    public ResultSet GetQuery(String sqlStatement,Connection conn) throws SQLException{
         
-        Connection conn = null;
-        try {
-            Class.forName(driver);
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/chantingpines", "root", "1234");
-        } catch (SQLException ex) {
-            Logger.getLogger(InvoiceGeneratorModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return conn;
-    }
-    
-    public ResultSet GetQuery(String sqlStatement) throws ClassNotFoundException{
-        Connection conn = this.GetConnection();
         ResultSet rs = null;
         try {
             Statement statement = conn.createStatement();
             rs = statement.executeQuery(sqlStatement);
-            conn.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(InvoiceGeneratorModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -50,9 +44,9 @@ public class InvoiceGeneratorModel {
         return rs;
     }
     
-    public Boolean updateQuery(String sqlStatement) throws ClassNotFoundException{
+    public Boolean updateQuery(String sqlStatement,Connection conn) throws SQLException{
         Boolean success = false;
-        Connection conn = this.GetConnection();
+        
         try {
             Statement statement = conn.createStatement();
             statement.executeUpdate(sqlStatement);
@@ -65,8 +59,9 @@ public class InvoiceGeneratorModel {
         return success;
     }
     
-    public ArrayList<String> getPrdList() throws ClassNotFoundException, SQLException{
-        ResultSet rs = this.GetQuery("SELECT * FROM product_list");
+    public ArrayList<String> getPrdList() throws SQLException{
+        Connection conn = InvoiceGeneratorModel.GetConnection();
+        ResultSet rs = this.GetQuery("SELECT * FROM product_list",conn);
         ArrayList<String> prdList = new ArrayList<>();
         
         while (rs.next()){
@@ -76,16 +71,19 @@ public class InvoiceGeneratorModel {
             String item = prdcode + " - " + prdname;
             prdList.add(item);
         }
+        conn.close();
         return prdList; 
     }
     
-    public String getPrdUOM(String itemName, String itemCode) throws ClassNotFoundException, SQLException{
-        ResultSet rs = this.GetQuery("SELECT item_uom FROM product_list WHERE item_code = '" + itemCode + "' AND item_name = '" + itemName + "'" );
+    public String getPrdUOM(String itemName, String itemCode) throws SQLException{
+        Connection conn = InvoiceGeneratorModel.GetConnection();
+        ResultSet rs = this.GetQuery("SELECT item_uom FROM product_list WHERE item_code = '" + itemCode + "' AND item_name = '" + itemName + "'",conn);
         String UOM = "";
         
         while (rs.next()){
             UOM = rs.getString("item_uom");
         }
+        conn.close();
         return UOM;
     }
     
