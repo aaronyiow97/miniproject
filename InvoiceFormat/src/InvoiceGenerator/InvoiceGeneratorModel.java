@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -51,7 +52,6 @@ public class InvoiceGeneratorModel {
             Statement statement = conn.createStatement();
             statement.executeUpdate(sqlStatement);
             success = true;
-            conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(InvoiceGeneratorModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -60,7 +60,7 @@ public class InvoiceGeneratorModel {
     }
     
     public ArrayList<String> getPrdList() throws SQLException{
-        Connection conn = InvoiceGeneratorModel.GetConnection();
+        Connection conn = GetConnection();
         ResultSet rs = this.GetQuery("SELECT * FROM product_list",conn);
         ArrayList<String> prdList = new ArrayList<>();
         
@@ -76,15 +76,109 @@ public class InvoiceGeneratorModel {
     }
     
     public String getPrdUOM(String itemName, String itemCode) throws SQLException{
-        Connection conn = InvoiceGeneratorModel.GetConnection();
+        Connection conn = GetConnection();
         ResultSet rs = this.GetQuery("SELECT item_uom FROM product_list WHERE item_code = '" + itemCode + "' AND item_name = '" + itemName + "'",conn);
         String UOM = "";
         
         while (rs.next()){
-            UOM = rs.getString("item_uom");
+        UOM = rs.getString("item_uom");
         }
         conn.close();
         return UOM;
+    }
+    
+    public String getUnitPrice(String itemName,String itemCode) throws SQLException{
+        Connection conn = GetConnection();
+        ResultSet rs = this.GetQuery("SELECT item_price FROM product_list WHERE item_code ='" +  itemCode + "' AND item_name = '" + itemName + "'", conn);
+        String UnitPrice = "";
+        
+        while (rs.next()){
+        UnitPrice = rs.getString("item_price");
+        }
+        conn.close();
+        return UnitPrice;
+    }
+    
+    public Boolean updateCurrentIdx(String type) throws SQLException{
+        String idx = "";
+        
+        Connection conn = GetConnection();
+        String sqlStatement = "SELECT current_num FROM number_generator WHERE type = '" + type + "'";
+        ResultSet rs = this.GetQuery(sqlStatement, conn);
+        
+        while (rs.next()){
+            idx = rs.getString("current_num");
+        }
+        
+        idx = Integer.toString(Integer.parseInt(idx)+1);
+        sqlStatement = "UPDATE number_generator SET current_num = '" + idx + "' WHERE type = '" + type + "'";
+        Boolean success = false;
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+        return success;
+    }
+    
+    public Boolean insertShipRecord(String shipIdx, String shipNum, String shipFees, String salesHdr) throws SQLException{
+        Connection conn = GetConnection();
+        String sqlStatement = "INSERT INTO shipment_record (shipment_idx,shipment_num,shipment_charges,sales_hdridx) " +
+                "VALUE ('" + shipIdx + "', '" + shipNum + "', '" + shipFees + "', '" + salesHdr + "')";
+        Boolean success = false;
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+        return success;
+    }
+    
+    public Boolean insertSalesHeader(String salesHdrIdx, String invNum, String ordNum, String invDate) throws SQLException{
+        Connection conn = GetConnection();
+        String sqlStatement = "INSERT INTO sales_header (sales_hdridx,invoice_num,order_num,invoice_date) " +
+                "VALUE ('" + salesHdrIdx + "', '" + invNum + "', '" + ordNum + "', '" + invDate + "')";
+        Boolean success = false;
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+        return success;
+    }
+    
+    public Boolean insertSalesDetail(String salesDtlIdx, String salesHdrIdx, String prdCode, String prdName, String uom, String qty, String unitPrice, String total) throws SQLException{
+        Connection conn = GetConnection();
+        String sqlStatement = "INSERT INTO sales_details (" +
+                "sales_dtlidx, " +
+                "sales_hdridx, " +
+                "sales_itemcode, " +
+                "sales_itemname, " +
+                "sales_itemuom, " +
+                "sales_qty, " +
+                "sales_price, " +
+                "sales_total) " +
+                "VALUE (" + 
+                "'" + salesDtlIdx + "', " +
+                "'" + salesHdrIdx + "', " +
+                "'" + prdCode + "', " +
+                "'" + prdName + "', " +
+                "'" + uom + "', " +
+                "'" + qty + "', " +
+                "'" + unitPrice + "', " +
+                "'" + total + "')";
+        
+        Boolean success = false;
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+        return success;
+        
+    
+    }
+    
+    public String getCurrentIdx(String type) throws SQLException{
+        String idx = "";
+        
+        Connection conn = GetConnection();
+        String sqlStatement = "SELECT current_num FROM number_generator WHERE type = '" + type + "'";
+        ResultSet rs = this.GetQuery(sqlStatement, conn);
+        
+        while (rs.next()){
+            idx = rs.getString("current_num");
+        }
+        conn.close();
+        return idx;
     }
     
     
