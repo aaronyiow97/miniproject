@@ -90,7 +90,6 @@ public class InvoiceGeneratorController {
             JSONObject salesInfo = view.getAllInfo();
             String InvNum = salesInfo.get("invoice_number").toString();
             try {
-                String ShipIdx = model.getCurrentIdx("ship_idx");
                 String SalesHdrIdx = model.getCurrentIdx("sales_hdr_idx");
                 
                 view.resetForm();

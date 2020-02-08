@@ -2,17 +2,11 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/Users/eevonn/Desktop/FIT3077/project/FIT3077_A2_1/src/my/safeheart/SafeHeartApplication.java</file>
-            <file>file:/Users/eevonn/Desktop/FIT3077/project/FIT3077_A2_1/src/fit3077_a2_1/FIT3077_A2_1.java</file>
-            <file>file:/Users/eevonn/Desktop/FIT3077/project/FIT3077_A2_1/src/fit3077_a2_1/SafeHeartView.java</file>
-            <file>file:/Users/eevonn/Desktop/FIT3077/project/FIT3077_A2_1/src/fit3077_a2_1/SafeHeartModel.java</file>
-            <file>file:/Users/eevonn/Desktop/FIT3077/project/FIT3077_A2_1/src/fit3077_a2_1/SafeHeartController.java</file>
-        </group>
         <group name="TestDev">
             <file>file:/Users/aaronyiow97/Desktop/Desktop/Monash%20IT_2019S1/FIT3077/Assignment_2/project/FIT3077_A2_1/src/fit3077_a2_1/SafeHeartController.java</file>
             <file>file:/Users/aaronyiow97/Desktop/Desktop/Monash%20IT_2019S1/FIT3077/Assignment_2/project/FIT3077_A2_1/src/fit3077_a2_1/SafeHeartModel.java</file>
             <file>file:/Users/aaronyiow97/Desktop/Desktop/Monash%20IT_2019S1/FIT3077/Assignment_2/project/FIT3077_A2_1/src/fit3077_a2_1/SafeHeartView.java</file>
         </group>
+        <group/>
     </open-files>
 </project-private>
