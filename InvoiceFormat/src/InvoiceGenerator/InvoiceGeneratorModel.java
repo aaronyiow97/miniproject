@@ -163,8 +163,33 @@ public class InvoiceGeneratorModel {
         success = this.updateQuery(sqlStatement, conn);
         conn.close();
         return success;
-        
+    }
     
+    public Boolean insertSalesShipRecord(String salesHdr, String type, String prdName, String uom, String qty, String unitPrice, String total) throws SQLException{
+        Boolean success = false;
+        Connection conn = GetConnection();
+        String sqlStatement = "INSERT INTO sales_ship_record (" +
+                "sales_hdridx, " + 
+                "mtype, " +
+                "sales_itemname, " +
+                "sales_uom, " +
+                "sales_qty, " +
+                "sales_price, " +
+                "sales_total) " +
+                "VALUE (" +
+                "'" + salesHdr + "', " +
+                "'" + type + "', " +
+                "'" + prdName + "', " +
+                "'" + uom + "', " +
+                "'" + qty + "', " +
+                "'" + unitPrice + "', " +
+                "'" + total + "')";
+
+        
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+                
+        return success;
     }
     
     public String getCurrentIdx(String type) throws SQLException{
@@ -179,6 +204,15 @@ public class InvoiceGeneratorModel {
         }
         conn.close();
         return idx;
+    }
+    
+    public Boolean clearSalesShipRec() throws SQLException{
+        Boolean success = false;
+        Connection conn = GetConnection();
+        String sqlStatement = "DELETE FROM sales_ship_record";
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+        return success;
     }
     
     

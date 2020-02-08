@@ -88,7 +88,6 @@ public class InvoiceGeneratorController {
     class GenerateListener implements ActionListener{
         public void actionPerformed(ActionEvent arg0){
             JSONObject salesInfo = view.getAllInfo();
-            String InvNum = salesInfo.get("invoice_number").toString();
             try {
                 String SalesHdrIdx = model.getCurrentIdx("sales_hdr_idx");
                 
@@ -103,6 +102,8 @@ public class InvoiceGeneratorController {
     
     class SubmitListener implements ActionListener{
         public void actionPerformed(ActionEvent arg0){
+            
+            String type = "";
             JSONObject salesInfo = view.getAllInfo();
             
             String InvNum = salesInfo.get("invoice_number").toString();
@@ -122,6 +123,7 @@ public class InvoiceGeneratorController {
             
              
             try {
+                model.clearSalesShipRec();
                 updateSalesHdrIdx = model.updateCurrentIdx("sales_hdr_idx");
                 //updateShipIdx = model.updateCurrentIdx("ship_idx");
                 
@@ -132,23 +134,8 @@ public class InvoiceGeneratorController {
                 insertSalesHeader = model.insertSalesHeader(SalesHdrIdx, InvNum, OrdNum, InvDate);
                 
                 
-                for (JSONObject parcel : shippingInfo){
-                    String ShipNum = "";
-                    String ShipFee = "";
-                    
-                    ShipNum = parcel.get("parcel_num").toString();
-                    ShipFee = parcel.get("fees").toString();
-                    
-                    Boolean updateShipIdx = false;
-                    Boolean insertShipRecord = false;
-                    
-                    updateShipIdx = model.updateCurrentIdx("ship_idx");
-                    String ShipIdx = model.getCurrentIdx("ship_idx");
-                    insertShipRecord = model.insertShipRecord(ShipIdx, ShipNum, ShipFee,SalesHdrIdx);
-                    
-                }
-                
                 for (JSONObject item : salesItems){
+                    type = "Sales";
                     String itemCode = "";
                     String itemName = "";
                     String uom = "";
@@ -165,13 +152,36 @@ public class InvoiceGeneratorController {
                     
                     Boolean updateSalesDtlIdx = false;
                     Boolean insertSalesDetails = false;
+                    Boolean insertSalesShipRec = false;
                     
                     updateSalesDtlIdx = model.updateCurrentIdx("sales_dtl_idx");
                     String SalesDtlIdx = model.getCurrentIdx("sales_dtl_idx");
                     
                     insertSalesDetails = model.insertSalesDetail(SalesDtlIdx,SalesHdrIdx,itemCode,itemName,uom,qty,unitPrice,total);
+                    insertSalesShipRec = model.insertSalesShipRecord(SalesHdrIdx, type, itemName, uom, qty, unitPrice, total);
                     
                 }
+                
+                for (JSONObject parcel : shippingInfo){
+                    type = "Shipping";
+                    String ShipNum = "";
+                    String ShipFee = "";
+                    
+                    ShipNum = parcel.get("parcel_num").toString();
+                    ShipFee = parcel.get("fees").toString();
+                    
+                    Boolean updateShipIdx = false;
+                    Boolean insertShipRecord = false;
+                    Boolean insertShipSalesRec = false;
+                    
+                    updateShipIdx = model.updateCurrentIdx("ship_idx");
+                    String ShipIdx = model.getCurrentIdx("ship_idx");
+                    insertShipRecord = model.insertShipRecord(ShipIdx, ShipNum, ShipFee,SalesHdrIdx);
+                    insertShipSalesRec = model.insertSalesShipRecord(SalesHdrIdx, type, ShipNum, "", "1", ShipFee, ShipFee);
+                    
+                    
+                }
+                
                 view.showPopUp("Successfully sent to server!");
                 
             } catch (SQLException ex) {
