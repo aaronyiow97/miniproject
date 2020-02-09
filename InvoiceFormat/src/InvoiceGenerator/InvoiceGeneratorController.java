@@ -5,12 +5,31 @@
  */
 package InvoiceGenerator;
 
+import java.sql.Connection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -21,6 +40,9 @@ import org.json.simple.JSONObject;
 public class InvoiceGeneratorController {
     private InvoiceGeneratorView view;
     private InvoiceGeneratorModel model;
+    private static String dbUrl = "jdbc:mysql://localhost:3306/chantingpines?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC";
+    private static String dbUser = "root";
+    private static String dbPwd = "";
     
     public InvoiceGeneratorController(InvoiceGeneratorModel theModel,InvoiceGeneratorView theView) throws SQLException{
         this.model = theModel;
@@ -88,11 +110,28 @@ public class InvoiceGeneratorController {
     class GenerateListener implements ActionListener{
         public void actionPerformed(ActionEvent arg0){
             JSONObject salesInfo = view.getAllInfo();
+            
             try {
-                String SalesHdrIdx = model.getCurrentIdx("sales_hdr_idx");
+                Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
+                int SalesHdrIdx = Integer.parseInt(model.getCurrentIdx("sales_hdr_idx"));
+                String InvNum = salesInfo.get("invoice_number").toString();
+                InputStream input = new FileInputStream(new File("E:\\Mini Project\\miniproject\\Jasper Reports\\ChantingPines_InvoiceFormat.jrxml"));
+                JasperDesign jd = JRXmlLoader.load(input);
+                JasperReport jasReport = JasperCompileManager.compileReport(jd);
+                HashMap param = new HashMap();
+                param.put("logo","E:/Mini Project/miniproject/Jasper Reports");
+                param.put("SalesHdr", SalesHdrIdx);
+                
+                JasperPrint jasPrint = JasperFillManager.fillReport(jasReport,param,conn);
+                JasperViewer.viewReport(jasPrint,false);
+                JasperExportManager.exportReportToPdfFile(jasPrint,InvNum+".pdf");
                 
                 view.resetForm();
             } catch (SQLException ex) {
+                Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JRException ex) {
                 Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
             }
             
