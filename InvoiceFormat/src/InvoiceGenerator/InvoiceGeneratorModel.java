@@ -138,6 +138,15 @@ public class InvoiceGeneratorModel {
         return success;
     }
     
+    public Boolean updateSalesHeader(double invoiceSum, String salesHdrIdx)throws SQLException{
+        Connection conn = GetConnection();
+        String sqlStatement = "UPDATE sales_header SET invoice_sum = " + invoiceSum + " WHERE sales_hdridx = '" + salesHdrIdx +"'"; 
+        Boolean success = false;
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+        return success;
+    }
+    
     public Boolean insertSalesDetail(String salesDtlIdx, String salesHdrIdx, String prdCode, String prdName, String uom, String qty, String unitPrice, String total) throws SQLException{
         Connection conn = GetConnection();
         String sqlStatement = "INSERT INTO sales_details (" +
