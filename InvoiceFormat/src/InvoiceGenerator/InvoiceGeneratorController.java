@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import static java.lang.Double.parseDouble;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -152,6 +153,7 @@ public class InvoiceGeneratorController {
             String InvNum = salesInfo.get("invoice_number").toString();
             String OrdNum = salesInfo.get("order_number").toString();
             String InvDate = salesInfo.get("invoice_date").toString();
+            double invoiceSum = 0.00;
 //            String ShipNum = salesInfo.get("ship_num").toString();
 //            String ShipFee = salesInfo.get("ship_fees").toString();
             ArrayList<JSONObject> shippingInfo = (ArrayList<JSONObject>) salesInfo.get("parcels");
@@ -192,6 +194,7 @@ public class InvoiceGeneratorController {
                     qty = item.get("sales_qty").toString();
                     unitPrice = item.get("unit_price").toString();
                     total = item.get("total").toString();
+                    invoiceSum += parseDouble(total);
                     
                     Boolean updateSalesDtlIdx = false;
                     Boolean insertSalesDetails = false;
@@ -212,6 +215,7 @@ public class InvoiceGeneratorController {
                     
                     ShipNum = parcel.get("parcel_num").toString();
                     ShipFee = parcel.get("fees").toString();
+                    invoiceSum += parseDouble(ShipFee);
                     
                     Boolean updateShipIdx = false;
                     Boolean insertShipRecord = false;
@@ -224,6 +228,7 @@ public class InvoiceGeneratorController {
                     
                     
                 }
+                Boolean updateSalesHeader = model.updateSalesHeader(invoiceSum, SalesHdrIdx);
                 
                 view.showPopUp("Successfully sent to server!");
                 
