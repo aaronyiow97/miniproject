@@ -115,18 +115,22 @@ public class InvoiceGeneratorController {
                 Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
                 int SalesHdrIdx = Integer.parseInt(model.getCurrentIdx("sales_hdr_idx"));
                 String InvNum = salesInfo.get("invoice_number").toString();
+                String OrderNum = salesInfo.get("order_number").toString();
                 InputStream input = new FileInputStream(new File("E:\\Mini Project\\miniproject\\Jasper Reports\\ChantingPines_InvoiceFormat.jrxml"));
                 JasperDesign jd = JRXmlLoader.load(input);
                 JasperReport jasReport = JasperCompileManager.compileReport(jd);
                 HashMap param = new HashMap();
                 param.put("logo","E:/Mini Project/miniproject/Jasper Reports");
                 param.put("SalesHdr", SalesHdrIdx);
+                param.put("OrderNum",OrderNum);
                 
                 JasperPrint jasPrint = JasperFillManager.fillReport(jasReport,param,conn);
                 JasperViewer.viewReport(jasPrint,false);
                 JasperExportManager.exportReportToPdfFile(jasPrint,InvNum+".pdf");
                 
                 view.resetForm();
+                view.setInvoiceNumHeader();
+                view.setOrderNumHeader();
             } catch (SQLException ex) {
                 Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (FileNotFoundException ex) {

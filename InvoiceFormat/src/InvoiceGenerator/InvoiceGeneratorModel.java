@@ -61,7 +61,7 @@ public class InvoiceGeneratorModel {
     
     public ArrayList<String> getPrdList() throws SQLException{
         Connection conn = GetConnection();
-        ResultSet rs = this.GetQuery("SELECT * FROM product_list",conn);
+        ResultSet rs = this.GetQuery("SELECT * FROM product_list ORDER BY item_code",conn);
         ArrayList<String> prdList = new ArrayList<>();
         
         while (rs.next()){
