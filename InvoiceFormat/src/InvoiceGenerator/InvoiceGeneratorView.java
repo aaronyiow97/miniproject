@@ -65,6 +65,8 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblParcel = new javax.swing.JTable();
         btnDeleteParcel = new javax.swing.JButton();
+        cbFreeShipping = new javax.swing.JCheckBox();
+        cbBillNextTime = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -129,6 +131,10 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
 
         btnDeleteParcel.setText("Delete Parcel");
 
+        cbFreeShipping.setText("Free Shipping");
+
+        cbBillNextTime.setText("Bill Next Time");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -176,7 +182,12 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                                             .addComponent(txtShipNo, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(txtShipFees, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(60, 60, 60)
-                                        .addComponent(btnAddParcel)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnAddParcel)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(cbFreeShipping)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(cbBillNextTime)))))
                                 .addContainerGap(145, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
@@ -252,7 +263,11 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                         .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(34, 34, 34))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbFreeShipping)
+                            .addComponent(cbBillNextTime))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnAddParcel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(107, 107, 107)
                         .addComponent(btnDeleteParcel)
@@ -329,6 +344,26 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         catch(Exception ex){
             
         }
+    }
+    
+    public String getParcelCheckBoxValue(){
+        if (cbFreeShipping.isSelected() && !cbBillNextTime.isSelected()){
+            return " - Free Shipping";
+        }
+        else if (!cbFreeShipping.isSelected() && cbBillNextTime.isSelected()){
+            return " - BILL NEXT TIME";
+        }
+        else{
+            return "";
+        }
+    }
+    
+    public boolean isFreeShippingChecked(){
+        return cbFreeShipping.isSelected();
+    }
+    
+    public boolean isBillNextChecked(){
+        return cbBillNextTime.isSelected();
     }
     
     public void deleteParcel(){
@@ -551,6 +586,8 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     private javax.swing.JButton btnDeleteParcel;
     private javax.swing.JButton btnGenerate;
     private javax.swing.JButton btnSubmit;
+    private javax.swing.JCheckBox cbBillNextTime;
+    private javax.swing.JCheckBox cbFreeShipping;
     private javax.swing.JComboBox<String> cbPrdList;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;

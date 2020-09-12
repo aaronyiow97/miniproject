@@ -75,7 +75,14 @@
                                           <Component id="txtShipFees" alignment="0" min="-2" pref="189" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
-                                      <Component id="btnAddParcel" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="btnAddParcel" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <Component id="cbFreeShipping" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="cbBillNextTime" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
                                   </Group>
                               </Group>
                               <EmptySpace pref="145" max="32767" attributes="0"/>
@@ -178,7 +185,12 @@
                       <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cbFreeShipping" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbBillNextTime" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnAddParcel" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
                       <Component id="btnDeleteParcel" min="-2" max="-2" attributes="0"/>
@@ -400,6 +412,16 @@
     <Component class="javax.swing.JButton" name="btnDeleteParcel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Delete Parcel"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="cbFreeShipping">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Free Shipping"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="cbBillNextTime">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Bill Next Time"/>
       </Properties>
     </Component>
   </SubComponents>

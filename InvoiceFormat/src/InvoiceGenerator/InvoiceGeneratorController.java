@@ -90,9 +90,20 @@ public class InvoiceGeneratorController {
         public void actionPerformed(ActionEvent arg0){
             String parcelNum = view.getShipmentNo();
             String fees = view.getShipmentFees();
-            view.addToParcelTable(parcelNum, fees);
-            view.setParcelFees("");
-            view.setParcelNumber("");
+            String checkBoxValue = view.getParcelCheckBoxValue();
+            parcelNum = parcelNum + checkBoxValue;
+            if (view.isBillNextChecked() || view.isFreeShippingChecked()){
+                fees = "0.00";
+            }
+            if (view.isBillNextChecked() && view.isFreeShippingChecked()){
+                view.showPopUp("Cannot Check Free Shipping and Bill Next Time at the same time!");
+            }
+            else{
+                view.addToParcelTable(parcelNum, fees);
+                view.setParcelFees("");
+                view.setParcelNumber("");
+            }
+            
         }
     }
     
@@ -127,7 +138,7 @@ public class InvoiceGeneratorController {
                 
                 JasperPrint jasPrint = JasperFillManager.fillReport(jasReport,param,conn);
                 JasperViewer.viewReport(jasPrint,false);
-                JasperExportManager.exportReportToPdfFile(jasPrint,InvNum+".pdf");
+                //JasperExportManager.exportReportToPdfFile(jasPrint,InvNum+".pdf");
                 
                 view.resetForm();
                 view.setInvoiceNumHeader();
