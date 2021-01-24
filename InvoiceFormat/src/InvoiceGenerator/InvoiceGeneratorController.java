@@ -55,6 +55,9 @@ public class InvoiceGeneratorController {
         this.view.addSubmitListener(new SubmitListener());
         this.view.addAddParcelListener(new AddParcelListener());
         this.view.addDeleteParcelListener(new DeleteParcelListener());
+        this.view.addSearchListener(new SearchListener());
+        this.view.addUpdateListener(new UpdateListener());
+        this.view.addEditParcelListener(new EditParcelListener());
         
         ArrayList<String> prdList = this.model.getPrdList();
         this.view.setPrdList(prdList);
@@ -95,6 +98,10 @@ public class InvoiceGeneratorController {
             if (view.isBillNextChecked() || view.isFreeShippingChecked()){
                 fees = "0.00";
             }
+            if (view.isHalfPriceChecked()){
+                Double halfPrice = Double.parseDouble(fees)/2;
+                fees = String.format("%.2f", halfPrice);
+            }
             if (view.isBillNextChecked() && view.isFreeShippingChecked()){
                 view.showPopUp("Cannot Check Free Shipping and Bill Next Time at the same time!");
             }
@@ -125,7 +132,7 @@ public class InvoiceGeneratorController {
             
             try {
                 Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
-                int SalesHdrIdx = Integer.parseInt(model.getCurrentIdx("sales_hdr_idx"));
+                int SalesHdrIdx = Integer.parseInt(model.getSalesHeader());
                 String InvNum = salesInfo.get("invoice_number").toString();
                 String OrderNum = salesInfo.get("order_number").toString();
                 InputStream input = new FileInputStream(new File("E:\\Mini Project\\miniproject\\Jasper Reports\\ChantingPines_InvoiceFormat.jrxml"));
@@ -152,6 +159,158 @@ public class InvoiceGeneratorController {
             }
             
             
+        }
+    }
+    
+    class SearchListener implements ActionListener{
+        public void actionPerformed(ActionEvent arg0){
+            String InvNum = view.getInvoiceNum();
+            try {
+                JSONObject salesDetails = model.getSalesDetails(InvNum);
+                
+                String ordNum = salesDetails.get("orderNum").toString();
+                view.setOrderNum(ordNum);
+                
+//                String invDate = salesDetails.get("invoiceDate").toString();
+//                view.setDate(invDate);
+                
+                ArrayList<JSONObject> shipments = (ArrayList<JSONObject>) salesDetails.get("ship");
+                for (JSONObject item : shipments){
+                    String shipNum = item.get("shipNum").toString();
+                    String shipCost = item.get("shipCost").toString();
+                    view.addToParcelTable(shipNum, shipCost);
+                }
+                
+                ArrayList<JSONObject> salesItems = (ArrayList<JSONObject>) salesDetails.get("items");
+                for (JSONObject item : salesItems){
+                    String itemCode = item.get("Code").toString();
+                    String itemName = item.get("Name").toString();
+                    String uom = item.get("UOM").toString();
+                    String qty = item.get("Qty").toString();
+                    String unitPrice = item.get("UPrice").toString();
+                    String total = item.get("TPrice").toString();
+                    
+                    view.addToSalesTable(itemCode, itemName, qty, uom, unitPrice, total);
+                    
+                }
+                
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    class UpdateListener implements ActionListener{
+        public void actionPerformed(ActionEvent arg0){
+            String type = "";
+            JSONObject salesInfo = view.getAllInfo();
+            
+            String InvNum = salesInfo.get("invoice_number").toString();
+            String OrdNum = salesInfo.get("order_number").toString();
+            String InvDate = salesInfo.get("invoice_date").toString();
+            double invoiceSum = 0.00;
+//            String ShipNum = salesInfo.get("ship_num").toString();
+//            String ShipFee = salesInfo.get("ship_fees").toString();
+            ArrayList<JSONObject> shippingInfo = (ArrayList<JSONObject>) salesInfo.get("parcels");
+            ArrayList<JSONObject> salesItems = (ArrayList<JSONObject>) salesInfo.get("sales_item");
+            
+            
+            Boolean updateSalesHdrIdx = false;
+            
+            
+            Boolean updateSalesHeader = false;
+            
+            
+             
+            try {
+                model.clearSalesShipRec();
+                //updateShipIdx = model.updateCurrentIdx("ship_idx");
+                
+                String SalesHdrIdx = model.getCurrentSalesHeaderIdx(InvNum,OrdNum);
+                //parse sales Header to controller for report
+                model.parseSalesHeader(SalesHdrIdx);
+                
+                
+                updateSalesHeader = model.updateSalesHeader(SalesHdrIdx, InvNum, OrdNum, InvDate);
+                
+                //update existing sales details to Inactive/false
+                //because user might add new sales item
+                //so need to generate new sales details 
+                Boolean updateSalesDtl = model.updateCurrentSalesDtlIdx(InvNum,0);
+                if (!updateSalesDtl) {
+                    throw new Exception("Failed to update sales details status");
+                }
+                
+                for (JSONObject item : salesItems){
+                    type = "Sales";
+                    String itemCode = "";
+                    String itemName = "";
+                    String uom = "";
+                    String qty = "";
+                    String unitPrice = "";
+                    String total = "";
+                    
+                    itemCode = item.get("item_code").toString();
+                    itemName = item.get("item_name").toString();
+                    uom = item.get("uom").toString();
+                    qty = item.get("sales_qty").toString();
+                    unitPrice = item.get("unit_price").toString();
+                    total = item.get("total").toString();
+                    invoiceSum += parseDouble(total);
+                    
+                    Boolean updateSalesDtlIdx = false;
+                    Boolean insertSalesDetails = false;
+                    Boolean insertSalesShipRec = false;
+                    
+                    
+                    
+                    updateSalesDtlIdx = model.updateCurrentIdx("sales_dtl_idx");
+                    String SalesDtlIdx = model.getCurrentIdx("sales_dtl_idx");
+                    
+                    insertSalesDetails = model.insertSalesDetail(SalesDtlIdx,SalesHdrIdx,itemCode,itemName,uom,qty,unitPrice,total);
+                    insertSalesShipRec = model.insertSalesShipRecord(SalesHdrIdx, type, itemName, uom, qty, unitPrice, total);
+                    
+                }
+                
+                //set related Ship record status to Inactive/false
+                //because user might add new shipping parcel
+                //need to generate new parcels
+                Boolean updateShipRecord = model.updateShipRecord(InvNum,0);
+                if (!updateShipRecord) {
+                    throw new Exception("Failed to update ship record status");
+                }
+                
+                for (JSONObject parcel : shippingInfo){
+                    type = "Shipping";
+                    String ShipNum = "";
+                    String ShipFee = "";
+                    
+                    ShipNum = parcel.get("parcel_num").toString();
+                    ShipFee = parcel.get("fees").toString();
+                    invoiceSum += parseDouble(ShipFee);
+                    
+                   Boolean updateShipIdx = false;
+                   Boolean insertShipRecord = false;
+                   Boolean insertShipSalesRec = false;
+                    
+                    updateShipIdx = model.updateCurrentIdx("ship_idx");
+                    String ShipIdx = model.getCurrentIdx("ship_idx");
+                    insertShipRecord = model.insertShipRecord(ShipIdx, ShipNum, ShipFee,SalesHdrIdx);
+                    insertShipSalesRec = model.insertSalesShipRecord(SalesHdrIdx, type, ShipNum, "", "1", ShipFee, ShipFee);
+                    
+                    
+                }
+                Boolean updateSalesInvoiceSum = model.updateSalesHeader(invoiceSum, SalesHdrIdx);
+                
+                view.showPopUp("Successfully Update The Invoice!");
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
+                view.showPopUp("Error Occured!");
+            } catch (Exception ex) {
+                Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -184,7 +343,8 @@ public class InvoiceGeneratorController {
                 //updateShipIdx = model.updateCurrentIdx("ship_idx");
                 
                 String SalesHdrIdx = model.getCurrentIdx("sales_hdr_idx");
-                //
+                //parse sales header to controller for report 
+                model.parseSalesHeader(SalesHdrIdx);
                 
                 
                 insertSalesHeader = model.insertSalesHeader(SalesHdrIdx, InvNum, OrdNum, InvDate);
@@ -250,6 +410,12 @@ public class InvoiceGeneratorController {
             
             
             
+        }
+    }
+    
+    class EditParcelListener implements ActionListener{
+        public void actionPerformed(ActionEvent arg0){
+            view.getSelectedParcel();
         }
     }
 }

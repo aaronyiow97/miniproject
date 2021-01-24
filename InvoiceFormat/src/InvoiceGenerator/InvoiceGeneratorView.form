@@ -24,13 +24,6 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="340" max="-2" attributes="0"/>
-              <Component id="btnGenerate" min="-2" pref="169" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="btnUpdate" min="-2" pref="146" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
@@ -83,6 +76,8 @@
                                               <Component id="cbFreeShipping" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Component id="cbBillNextTime" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="cbHalfPrice" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -95,7 +90,10 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
-                                      <Component id="btnDeleteParcel" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="btnDeleteParcel" max="32767" attributes="0"/>
+                                          <Component id="btnEditParcel" max="32767" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <Component id="InvDatePicker" alignment="0" min="-2" pref="208" max="-2" attributes="0"/>
                                   <Component id="txtOrderNo" alignment="0" min="-2" pref="189" max="-2" attributes="0"/>
@@ -110,6 +108,14 @@
                       </Group>
                   </Group>
               </Group>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="362" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="btnGenerate" pref="169" max="32767" attributes="0"/>
+                  <Component id="btnUpdate" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -146,14 +152,17 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="cbFreeShipping" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbBillNextTime" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbHalfPrice" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnAddParcel" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
                       <Component id="btnDeleteParcel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                      <Component id="btnEditParcel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lblShipNo" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
@@ -173,7 +182,7 @@
                                   <Component id="lblPrdList" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                                   <Component id="cbPrdList" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="41" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="lblSalesQty" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                                   <Component id="txtSalesQty" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -199,14 +208,13 @@
                               <Component id="btnSubmit" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="36" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="btnUpdate" alignment="0" min="-2" pref="33" max="-2" attributes="0"/>
-                          <Component id="btnGenerate" min="-2" pref="33" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnUpdate" min="-2" pref="33" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <Component id="btnGenerate" min="-2" pref="33" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -445,6 +453,19 @@
         <Property name="text" type="java.lang.String" value="Update Invoice"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnEditParcel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Edit Parcel"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="cbHalfPrice">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Half Price"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbHalfPriceActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

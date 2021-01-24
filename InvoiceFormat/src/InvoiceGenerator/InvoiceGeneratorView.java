@@ -7,10 +7,13 @@ package InvoiceGenerator;
 
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.json.simple.JSONObject;
@@ -69,6 +72,8 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         cbBillNextTime = new javax.swing.JCheckBox();
         btnSearch = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
+        btnEditParcel = new javax.swing.JButton();
+        cbHalfPrice = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -143,16 +148,19 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         btnUpdate.setText("Update Invoice");
         btnUpdate.setToolTipText("");
 
+        btnEditParcel.setText("Edit Parcel");
+
+        cbHalfPrice.setText("Half Price");
+        cbHalfPrice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbHalfPriceActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(340, 340, 340)
-                .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -197,7 +205,9 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(cbFreeShipping)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(cbBillNextTime)))))
+                                                .addComponent(cbBillNextTime)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(cbHalfPrice)))))
                                 .addContainerGap(145, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
@@ -205,7 +215,9 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(82, 82, 82)
-                                        .addComponent(btnDeleteParcel))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(btnDeleteParcel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btnEditParcel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                     .addComponent(InvDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtOrderNo, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
@@ -213,6 +225,12 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(btnSearch)))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(362, 362, 362)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnGenerate, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                    .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,13 +259,16 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                         .addGap(22, 22, 22)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cbFreeShipping)
-                            .addComponent(cbBillNextTime))
+                            .addComponent(cbBillNextTime)
+                            .addComponent(cbHalfPrice))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnAddParcel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(107, 107, 107)
                         .addComponent(btnDeleteParcel)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(btnEditParcel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(43, 43, 43)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblShipNo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -264,7 +285,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblPrdList, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cbPrdList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblSalesQty, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtSalesQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -282,12 +303,12 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(btnDelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnSubmit)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(73, 73, 73))))
+                                .addComponent(btnSubmit)))))
+                .addGap(18, 18, 18)
+                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
+                .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
         );
 
         lblInvoiceNo.getAccessibleContext().setAccessibleName("lblInvoiceNo");
@@ -317,6 +338,10 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     private void txtSalesQtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSalesQtyActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtSalesQtyActionPerformed
+
+    private void cbHalfPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbHalfPriceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbHalfPriceActionPerformed
 
     
     public String getInvoiceNum(){
@@ -363,11 +388,14 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     }
     
     public String getParcelCheckBoxValue(){
-        if (cbFreeShipping.isSelected() && !cbBillNextTime.isSelected()){
+        if (cbFreeShipping.isSelected() && !cbBillNextTime.isSelected() && !cbHalfPrice.isSelected()){
             return " - Free Shipping";
         }
-        else if (!cbFreeShipping.isSelected() && cbBillNextTime.isSelected()){
+        else if (!cbFreeShipping.isSelected() && cbBillNextTime.isSelected() && !cbHalfPrice.isSelected()){
             return " - BILL NEXT TIME";
+        }
+        else if (!cbFreeShipping.isSelected() && !cbBillNextTime.isSelected() && cbHalfPrice.isSelected()){
+            return " - Half Price For Shipping For Order > USD500";
         }
         else{
             return "";
@@ -380,6 +408,10 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     
     public boolean isBillNextChecked(){
         return cbBillNextTime.isSelected();
+    }
+    
+    public boolean isHalfPriceChecked(){
+        return cbHalfPrice.isSelected();
     }
     
     public void deleteParcel(){
@@ -467,8 +499,24 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         txtInvoiceNo.setText("CZJ");
     }
     
+    public void setOrderNum(String OrdNum){
+        txtOrderNo.setText(OrdNum);
+    }
+    
     public void setOrderNumHeader(){
         txtOrderNo.setText("#");
+    }
+    
+    public void setDate(String date){
+        SimpleDateFormat formatter = new SimpleDateFormat("E MM/dd/yyyy");
+        Date newDate;
+        try {
+            newDate = formatter.parse(date);
+            InvDatePicker.setDate(newDate);
+        } catch (ParseException ex) {
+            Logger.getLogger(InvoiceGeneratorView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
     public void setParcelNumber(String s){
@@ -505,6 +553,18 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     
     public void addDeleteParcelListener(ActionListener listenForDeleteParcelButton){
         btnDeleteParcel.addActionListener(listenForDeleteParcelButton);
+    }
+    
+    public void addSearchListener(ActionListener listenForSearchButton) {
+        btnSearch.addActionListener(listenForSearchButton);
+    }
+    
+    public void addUpdateListener(ActionListener listenForUpdateButton) {
+        btnUpdate.addActionListener(listenForUpdateButton);
+    }
+    
+    public void addEditParcelListener(ActionListener listenForEditParcelButton){
+        btnEditParcel.addActionListener(listenForEditParcelButton);
     }
     
     public void resetForm(){
@@ -549,6 +609,17 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
             }
         }
     }
+    
+    public void getSelectedParcel(){
+        DefaultTableModel model = (DefaultTableModel) tblParcel.getModel();
+        int selectedParcel = tblParcel.getSelectedRow();
+        String parcelNum = model.getValueAt(selectedParcel, 0).toString();
+        String parcelFees = model.getValueAt(selectedParcel, 1).toString();
+        this.setParcelNumber(parcelNum);
+        this.setParcelFees(parcelFees);
+        model.removeRow(selectedParcel);
+    }
+    
     
     public void showPopUp(String infoMessage){
         JOptionPane.showMessageDialog(null,infoMessage,"Message Box",JOptionPane.INFORMATION_MESSAGE);
@@ -600,12 +671,14 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     private javax.swing.JButton btnAddParcel;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnDeleteParcel;
+    private javax.swing.JButton btnEditParcel;
     private javax.swing.JButton btnGenerate;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSubmit;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JCheckBox cbBillNextTime;
     private javax.swing.JCheckBox cbFreeShipping;
+    private javax.swing.JCheckBox cbHalfPrice;
     private javax.swing.JComboBox<String> cbPrdList;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
