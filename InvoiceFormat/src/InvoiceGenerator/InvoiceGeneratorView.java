@@ -395,7 +395,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
             return " - BILL NEXT TIME";
         }
         else if (!cbFreeShipping.isSelected() && !cbBillNextTime.isSelected() && cbHalfPrice.isSelected()){
-            return " - Half Price For Shipping For Order > USD500";
+            return " - 50% OFF For Shipping";
         }
         else{
             return "";

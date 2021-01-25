@@ -164,6 +164,8 @@ public class InvoiceGeneratorController {
     
     class SearchListener implements ActionListener{
         public void actionPerformed(ActionEvent arg0){
+            view.removeAllSalesItem();
+            view.removeAllParcelRecord();
             String InvNum = view.getInvoiceNum();
             try {
                 JSONObject salesDetails = model.getSalesDetails(InvNum);
