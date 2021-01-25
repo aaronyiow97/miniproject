@@ -379,52 +379,54 @@ Australia]]></text>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="25" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="23" height="20" uuid="3c21701c-3a12-4830-9474-9008814b176b">
+		<band height="20" splitType="Stretch">
+			<textField textAdjust="StretchHeight">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="23" height="20" isPrintWhenDetailOverflows="true" uuid="3c21701c-3a12-4830-9474-9008814b176b">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
+				<textElement markup="none"/>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="23" y="0" width="206" height="20" uuid="5e3fe864-9f03-4e3a-851b-b8569b223d9a">
+			<textField textAdjust="StretchHeight">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="23" y="0" width="206" height="20" isPrintWhenDetailOverflows="true" uuid="5e3fe864-9f03-4e3a-851b-b8569b223d9a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
+				<textElement markup="none"/>
 				<textFieldExpression><![CDATA[$F{PRDNAME}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="229" y="0" width="88" height="20" uuid="d8ca2215-00cf-44dc-9b9a-9fd893f9ebfc">
+			<textField textAdjust="StretchHeight">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="229" y="0" width="88" height="20" isPrintWhenDetailOverflows="true" uuid="d8ca2215-00cf-44dc-9b9a-9fd893f9ebfc">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right" markup="none"/>
 				<textFieldExpression><![CDATA[String.format("%.2f",$F{QTY})]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="317" y="0" width="80" height="20" uuid="9dc86659-5130-43bf-8712-1e6616352b00">
+			<textField textAdjust="StretchHeight">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="317" y="0" width="80" height="20" isPrintWhenDetailOverflows="true" uuid="9dc86659-5130-43bf-8712-1e6616352b00">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Center" markup="none"/>
 				<textFieldExpression><![CDATA[$F{UOM}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="397" y="0" width="78" height="20" uuid="828f0bcf-3e06-4e8a-b09c-db2f5da5edff">
+			<textField textAdjust="StretchHeight">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="397" y="0" width="78" height="20" isPrintWhenDetailOverflows="true" uuid="828f0bcf-3e06-4e8a-b09c-db2f5da5edff">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right" markup="none"/>
 				<textFieldExpression><![CDATA[$F{UNITPRICE}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="475" y="0" width="80" height="20" uuid="58575c10-0814-4e26-865e-26a89184fbe8">
+			<textField textAdjust="StretchHeight">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="475" y="0" width="80" height="20" isPrintWhenDetailOverflows="true" uuid="58575c10-0814-4e26-865e-26a89184fbe8">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right" markup="none"/>
 				<textFieldExpression><![CDATA[$F{TOTALPRICE}]]></textFieldExpression>
 			</textField>
 		</band>

@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
@@ -224,5 +225,140 @@ public class InvoiceGeneratorModel {
         return success;
     }
     
+    public JSONObject getSalesDetails(String InvNum) throws SQLException{
+        JSONObject fullDetails = new JSONObject();
+        Connection conn = GetConnection();
+        
+        //get order number and invoice date
+        String sqlStatement = "SELECT order_num, invoice_date FROM sales_header WHERE invoice_num = '" + InvNum +"'";
+        ResultSet salesHeader = this.GetQuery(sqlStatement, conn);
+        while (salesHeader.next()){
+            fullDetails.put("orderNum", salesHeader.getString("order_num"));
+            fullDetails.put("invoiceDate", salesHeader.getDate("invoice_date"));
+        }
+        
+        //get shipment number and cost
+        sqlStatement = "SELECT shipment_num, shipment_charges FROM shipment_record sr LEFT JOIN sales_header sh ON sh.sales_hdridx = sr.sales_hdridx WHERE sh.invoice_num = '" + InvNum + "'";
+        ResultSet shippingDetails = this.GetQuery(sqlStatement, conn);
+        ArrayList<JSONObject> shipments = new ArrayList<>();
+        while (shippingDetails.next()){
+            JSONObject shipmentDetails = new JSONObject();
+            shipmentDetails.put("shipNum",shippingDetails.getString("shipment_num"));
+            shipmentDetails.put("shipCost",shippingDetails.getString("shipment_charges"));
+            shipments.add(shipmentDetails);
+        }
+        fullDetails.put("ship", shipments);
+        
+        //get sales items details
+        sqlStatement = "SELECT sd.* FROM sales_details sd LEFT JOIN sales_header sh on sh.sales_hdridx = sd.sales_hdridx WHERE sh.invoice_num = '" + InvNum + "' AND sd.status = 1";
+        ResultSet salesDetails = this.GetQuery(sqlStatement, conn);
+        ArrayList<JSONObject> item = new ArrayList<>();
+        while (salesDetails.next()){
+            JSONObject salesDetail = new JSONObject();
+            salesDetail.put("Code",salesDetails.getString("sales_itemcode"));
+            salesDetail.put("Name",salesDetails.getString("sales_itemname"));
+            salesDetail.put("Qty",salesDetails.getString("sales_qty"));
+            salesDetail.put("UOM",salesDetails.getString("sales_itemuom"));
+            salesDetail.put("UPrice",salesDetails.getString("sales_price"));
+            salesDetail.put("TPrice",salesDetails.getString("sales_total"));
+            item.add(salesDetail);
+        }
+        fullDetails.put("items",item);
+        
+        conn.close();
+        return fullDetails;
+        
+    }
     
+    public String getCurrentSalesHeaderIdx(String InvNum, String OrdNum) throws SQLException{
+        String salesHdrIdx = "";
+        Connection conn = GetConnection();
+        
+        //get order number and invoice date
+        String sqlStatement = "SELECT sales_hdridx FROM sales_header WHERE invoice_num = '" + InvNum +"'" + "AND order_num = '" + OrdNum + "'";
+        ResultSet salesHeader = this.GetQuery(sqlStatement, conn);
+        while (salesHeader.next()){
+            salesHdrIdx = salesHeader.getString("sales_hdridx");
+        }
+        return salesHdrIdx;
+    }
+    
+    public Boolean updateCurrentSalesDtlIdx(String InvNum, int Status) throws SQLException{
+        String salesDtlIdx = "";
+        Boolean success = false;
+        Connection conn = GetConnection();
+        
+        //get order number and invoice date
+        String sqlStatement = "SELECT sales_dtlidx FROM sales_details sd LEFT JOIN sales_header sh on sh.sales_hdridx = sd.sales_hdridx WHERE sh.invoice_num = '" + InvNum + "'";
+        ResultSet salesDetails = this.GetQuery(sqlStatement, conn);
+        List<Boolean> boolVal = new ArrayList<Boolean>();
+        while (salesDetails.next()){
+            salesDtlIdx = salesDetails.getString("sales_dtlidx");
+            sqlStatement = "UPDATE sales_details SET status = '" + Status + "' WHERE sales_dtlidx = '" + salesDtlIdx + "'";
+            Boolean testUpdate = this.updateQuery(sqlStatement,conn);
+            boolVal.add(testUpdate);
+        }
+        if (boolVal.contains(false)){
+            success = false;
+        }
+        else{
+            success = true;
+        }
+        conn.close();
+        return success;
+    }
+    
+    public Boolean updateSalesHeader(String SalesHdrIdx, String InvNum, String OrdNum, String InvDate)throws SQLException{
+        Connection conn = GetConnection();
+        String sqlStatement = "UPDATE sales_header SET invoice_num = '" + InvNum + "', order_num = '" + OrdNum + "', invoice_date = '" + InvDate + "'" + " WHERE sales_hdridx = '" + SalesHdrIdx +"'"; 
+        Boolean success = false;
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+        return success;
+    }
+    
+    public Boolean updateSalesDetail(String SalesHdrIdx, String InvNum, String OrdNum, String InvDate)throws SQLException{
+        Connection conn = GetConnection();
+        String sqlStatement = "UPDATE sales_header SET invoice_num = '" + InvNum + "', order_num = '" + OrdNum + "', invoice_date = '" + InvDate + "'" + " WHERE sales_hdridx = '" + SalesHdrIdx +"'"; 
+        Boolean success = false;
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+        return success;
+    }
+    
+    
+    public Boolean updateShipRecord(String InvNum, int Status) throws SQLException{
+        String shipIdx = "";
+        Boolean success = false;
+        Connection conn = GetConnection();
+        
+        //get shipmentidx
+        String sqlStatement = "SELECT shipment_idx FROM shipment_record sr LEFT JOIN sales_header sh ON sh.sales_hdridx = sr.sales_hdridx WHERE sh.invoice_num = '" + InvNum + "'";
+        ResultSet shipRecords = this.GetQuery(sqlStatement, conn);
+        List<Boolean> boolVal = new ArrayList<Boolean>();
+        while (shipRecords.next()){
+            shipIdx = shipRecords.getString("shipment_idx");
+            //sqlStatement = "UPDATE shipment_record SET status = '" + Status + "' WHERE shipment_idx = '" + shipIdx + "'";
+            sqlStatement = "DELETE FROM shipment_record WHERE shipment_idx = '" + shipIdx + "'";
+            Boolean testUpdate = this.updateQuery(sqlStatement,conn);
+            boolVal.add(testUpdate);
+        }
+        if (boolVal.contains(false)){
+            success = false;
+        }
+        else{
+            success = true;
+        }
+        conn.close();
+        return success;
+    }
+    
+    private String SalesHdrIdx;
+    public void parseSalesHeader(String salesHdrIdx){
+        SalesHdrIdx = salesHdrIdx;
+    }
+    
+    public String getSalesHeader(){
+        return SalesHdrIdx;
+    }
 }
