@@ -361,4 +361,72 @@ public class InvoiceGeneratorModel {
     public String getSalesHeader(){
         return SalesHdrIdx;
     }
+    
+    public Boolean insertNewPrd(String code, String name, String cat, String uom, String price) throws SQLException{
+        Boolean success = false;
+        Connection conn = GetConnection();
+        String sqlStatement = "INSERT INTO product_list (" +
+                "item_code, " + 
+                "item_name, " +
+                "item_cat, " +
+                "item_uom, " +
+                "item_price) " +
+                "VALUE (" +
+                "'" + code + "', " +
+                "'" + name + "', " +
+                "'" + cat + "', " +
+                "'" + uom + "', " +
+                "'" + price + "')";
+
+        
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+                
+        return success;
+    }
+    
+    public Boolean updatePrdDetails(String code, String name, String cat, String uom, String price) throws SQLException{
+        Boolean success = false;
+        Connection conn = GetConnection();
+        String sqlStatement = "UPDATE product_list SET item_name = '" + name + "', item_cat = '" + cat + "', item_uom = '" + uom + "', item_price = '" + price + "' WHERE item_code = '" + code + "'";
+        success = this.updateQuery(sqlStatement, conn);
+        conn.close();
+        return success;
+    }
+    
+    public JSONObject getPrdDetails(String code) throws SQLException{
+        JSONObject prdDetails = new JSONObject();
+        Connection conn = GetConnection();
+        String sqlStatement = "SELECT * FROM product_list WHERE item_code = '" + code + "'";
+        ResultSet retVal = this.GetQuery(sqlStatement, conn);
+        while (retVal.next()){
+            prdDetails.put("code", retVal.getString("item_code"));
+            prdDetails.put("name", retVal.getString("item_name"));
+            prdDetails.put("cat", retVal.getString("item_cat"));
+            prdDetails.put("uom", retVal.getString("item_uom"));
+            prdDetails.put("price", retVal.getString("item_price"));
+        }
+        conn.close();
+        return prdDetails;
+    }
+    
+    public JSONObject getAllPrd() throws SQLException{
+        ArrayList<JSONObject> prdDetails = new ArrayList<>();
+        JSONObject prdCollection = new JSONObject();
+        Connection conn = GetConnection();
+        String sqlStatement = "SELECT * FROM product_list ORDER BY item_code";
+        ResultSet retVal = this.GetQuery(sqlStatement, conn);
+        while (retVal.next()){
+            JSONObject prdDetail = new JSONObject();
+            prdDetail.put("code", retVal.getString("item_code"));
+            prdDetail.put("name", retVal.getString("item_name"));
+            prdDetail.put("cat", retVal.getString("item_cat"));
+            prdDetail.put("uom", retVal.getString("item_uom"));
+            prdDetail.put("price", retVal.getString("item_price"));
+            prdDetails.add(prdDetail);
+        }
+        prdCollection.put("products", prdDetails);
+        conn.close();
+        return prdCollection;
+    }
 }

@@ -58,11 +58,117 @@ public class InvoiceGeneratorController {
         this.view.addSearchListener(new SearchListener());
         this.view.addUpdateListener(new UpdateListener());
         this.view.addEditParcelListener(new EditParcelListener());
+        this.view.addAddItemListener(new AddItemListener());
+        this.view.addUpdateItemListener(new UpdateItemListener());
+        this.view.addSearchItemListener(new SearchItemListener());
         
         ArrayList<String> prdList = this.model.getPrdList();
         this.view.setPrdList(prdList);
         this.view.setInvoiceNumHeader();
         this.view.setOrderNumHeader();
+    }
+
+    class SearchItemListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0){
+            String prdCode = view.getProductCode();
+            if (prdCode.isEmpty()){
+                try {
+                    view.clearProductList();
+                    JSONObject productCollection = model.getAllPrd();
+                    ArrayList<JSONObject> product = (ArrayList<JSONObject>) productCollection.get("products");
+                    int index = 0;
+                    for (JSONObject item : product){
+                        index += 1;
+                        String code = item.get("code").toString();
+                        String name = item.get("name").toString();
+                        String cat = item.get("cat").toString();
+                        String uom = item.get("uom").toString();
+                        String price = item.get("price").toString();
+                        view.setProductList(index,code, name, cat, uom, price);
+                        
+                    }
+                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else{
+                try {
+                    JSONObject prdDetails = model.getPrdDetails(prdCode);
+                    String code = prdDetails.get("code").toString();
+                    String name = prdDetails.get("name").toString();
+                    String cat = prdDetails.get("cat").toString();
+                    String uom = prdDetails.get("uom").toString();
+                    String price = prdDetails.get("price").toString();
+                    view.setProductCode(code);
+                    view.setProductName(name);
+                    view.setProductCat(cat);
+                    view.setProductUom(uom);
+                    view.setProductUPrice(price);
+                } catch (SQLException ex) {
+                    
+                }
+            }
+        }
+    }
+
+    class UpdateItemListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0){
+            String prdCode = view.getProductCode();
+            String prdName = view.getProductName();
+            String prdCat = view.getProductCat();
+            String prdUom = view.getProductUom();
+            String prdUprice = view.getProductUPrice();
+            
+            try {
+                Boolean success = model.updatePrdDetails(prdCode, prdName, prdCat, prdUom, prdUprice);
+                if (!success){
+                    throw new Exception("Failed to update product!");
+                }
+                else{
+                    view.clearProductList();
+                    view.setProductCode("");
+                    view.setProductName("");
+                    view.setProductUPrice("");
+                    
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                view.showPopUp(ex.toString());
+            }
+            
+        }
+    }
+
+    class AddItemListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0){
+            String prdCode = view.getProductCode();
+            String prdName = view.getProductName();
+            String prdCat = view.getProductCat();
+            String prdUom = view.getProductUom();
+            String prdUprice = view.getProductUPrice();
+            
+            try {
+                Boolean success = model.insertNewPrd(prdCode, prdName, prdCat, prdUom, prdUprice);
+                if (!success){
+                    throw new Exception("Add New Product Failed!");
+                }
+                else{
+                    view.clearProductList();
+                    view.setProductCode("");
+                    view.setProductName("");
+                    view.setProductUPrice("");
+                }
+            } catch (SQLException ex) {
+                view.showPopUp(ex.toString());
+            } catch (Exception ex) {
+                view.showPopUp(ex.toString());
+            }
+        }
     }
     
     class AddListener implements ActionListener{
