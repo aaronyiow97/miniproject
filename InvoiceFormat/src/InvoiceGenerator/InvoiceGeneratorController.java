@@ -61,11 +61,19 @@ public class InvoiceGeneratorController {
         this.view.addAddItemListener(new AddItemListener());
         this.view.addUpdateItemListener(new UpdateItemListener());
         this.view.addSearchItemListener(new SearchItemListener());
+        this.view.addResetButtonListener(new ResetButtonListener());
         
         ArrayList<String> prdList = this.model.getPrdList();
         this.view.setPrdList(prdList);
         this.view.setInvoiceNumHeader();
         this.view.setOrderNumHeader();
+    }
+
+    class ResetButtonListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0) {
+            view.resetForm();
+        }
     }
 
     class SearchItemListener implements ActionListener {
@@ -90,7 +98,7 @@ public class InvoiceGeneratorController {
                     }
                     
                 } catch (SQLException ex) {
-                    Logger.getLogger(InvoiceGeneratorController.class.getName()).log(Level.SEVERE, null, ex);
+                    view.showPopUp(ex.toString());
                 }
             }
             else{
@@ -107,7 +115,7 @@ public class InvoiceGeneratorController {
                     view.setProductUom(uom);
                     view.setProductUPrice(price);
                 } catch (SQLException ex) {
-                    
+                    view.showPopUp(ex.toString());
                 }
             }
         }
@@ -128,10 +136,13 @@ public class InvoiceGeneratorController {
                     throw new Exception("Failed to update product!");
                 }
                 else{
+                    view.showPopUp("Successfully Update Item!");
                     view.clearProductList();
                     view.setProductCode("");
                     view.setProductName("");
                     view.setProductUPrice("");
+                    ArrayList<String> prdList = model.getPrdList();
+                    view.setPrdList(prdList);
                     
                 }
             } catch (SQLException ex) {
@@ -158,10 +169,13 @@ public class InvoiceGeneratorController {
                     throw new Exception("Add New Product Failed!");
                 }
                 else{
+                    view.showPopUp("Successfully Added Item!");
                     view.clearProductList();
                     view.setProductCode("");
                     view.setProductName("");
                     view.setProductUPrice("");
+                    ArrayList<String> prdList = model.getPrdList();
+                    view.setPrdList(prdList);
                 }
             } catch (SQLException ex) {
                 view.showPopUp(ex.toString());
@@ -241,11 +255,11 @@ public class InvoiceGeneratorController {
                 int SalesHdrIdx = Integer.parseInt(model.getSalesHeader());
                 String InvNum = salesInfo.get("invoice_number").toString();
                 String OrderNum = salesInfo.get("order_number").toString();
-                InputStream input = new FileInputStream(new File("E:\\Mini Project\\miniproject\\Jasper Reports\\ChantingPines_InvoiceFormat.jrxml"));
+                InputStream input = new FileInputStream(new File("../JasperReport/ChantingPines_InvoiceFormat.jrxml"));
                 JasperDesign jd = JRXmlLoader.load(input);
                 JasperReport jasReport = JasperCompileManager.compileReport(jd);
                 HashMap param = new HashMap();
-                param.put("logo","E:/Mini Project/miniproject/Jasper Reports");
+                param.put("logo","../JasperReport");
                 param.put("SalesHdr", SalesHdrIdx);
                 param.put("OrderNum",OrderNum);
                 
