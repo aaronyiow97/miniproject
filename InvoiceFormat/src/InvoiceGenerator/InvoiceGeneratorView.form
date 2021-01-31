@@ -76,6 +76,8 @@
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="btnSearchPrd" min="-2" pref="118" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="btnResetPrd" min="-2" pref="109" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="btnAddPrd" min="-2" pref="99" max="-2" attributes="0"/>
@@ -101,6 +103,7 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="txtPrdCode" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnSearchPrd" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnResetPrd" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -248,6 +251,11 @@
             <Component class="javax.swing.JButton" name="btnUpdatePrd">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Update"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnResetPrd">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Reset"/>
               </Properties>
             </Component>
           </SubComponents>
