@@ -59,6 +59,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         tblProductList = new javax.swing.JTable();
         btnUpdatePrd = new javax.swing.JButton();
+        btnResetPrd = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         lblInvoiceNo = new javax.swing.JLabel();
@@ -151,6 +152,8 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
 
         btnUpdatePrd.setText("Update");
 
+        btnResetPrd.setText("Reset");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -176,7 +179,9 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                                     .addComponent(txtPrdName)
                                     .addComponent(txtPrdCode))
                                 .addGap(18, 18, 18)
-                                .addComponent(btnSearchPrd, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnSearchPrd, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnResetPrd, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btnAddPrd, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -194,7 +199,8 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtPrdCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnSearchPrd)))
+                        .addComponent(btnSearchPrd)
+                        .addComponent(btnResetPrd)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
@@ -777,6 +783,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     
     public void addResetButtonListener(ActionListener listenForResetButton){
         btnReset.addActionListener(listenForResetButton);
+        btnResetPrd.addActionListener(listenForResetButton);
     }
     
     public void setProductList(int index, String code, String name, String cat, String uom, String uprice){
@@ -897,6 +904,7 @@ public class InvoiceGeneratorView extends javax.swing.JFrame {
     private javax.swing.JButton btnEditParcel;
     private javax.swing.JButton btnGenerate;
     private javax.swing.JButton btnReset;
+    private javax.swing.JButton btnResetPrd;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSearchPrd;
     private javax.swing.JButton btnSubmit;

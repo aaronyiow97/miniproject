@@ -73,6 +73,11 @@ public class InvoiceGeneratorController {
 
         public void actionPerformed(ActionEvent arg0) {
             view.resetForm();
+            view.setInvoiceNumHeader();
+            view.setOrderNumHeader();
+            view.setProductCode("");
+            view.setProductName("");
+            view.setProductUPrice("");
         }
     }
 
