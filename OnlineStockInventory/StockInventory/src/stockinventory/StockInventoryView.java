@@ -7,6 +7,8 @@ package stockinventory;
 
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -39,13 +41,11 @@ public class StockInventoryView extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtYear = new javax.swing.JTextField();
         txtName = new javax.swing.JTextField();
         txtQty = new javax.swing.JTextField();
         cbLocation = new javax.swing.JComboBox<>();
-        datePicker1 = new org.jdesktop.swingx.JXDatePicker();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtRemarks = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
@@ -58,6 +58,10 @@ public class StockInventoryView extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         lblStockId = new javax.swing.JLabel();
         btnEdit = new javax.swing.JButton();
+        cbYear = new javax.swing.JCheckBox();
+        cbStkName = new javax.swing.JCheckBox();
+        cbLoc = new javax.swing.JCheckBox();
+        cbRemarks = new javax.swing.JCheckBox();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -89,19 +93,10 @@ public class StockInventoryView extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel5.setText("Stock Location");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jLabel6.setText("Date Added");
-
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel7.setText("Remarks");
 
-        cbLocation.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "KL", "Kuantan" }));
-
-        datePicker1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                datePicker1ActionPerformed(evt);
-            }
-        });
+        cbLocation.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-- Select Location --", "KL", "Kuantan" }));
 
         txtRemarks.setColumns(20);
         txtRemarks.setRows(5);
@@ -139,6 +134,14 @@ public class StockInventoryView extends javax.swing.JFrame {
 
         btnEdit.setText("Edit");
 
+        cbYear.setText("Year");
+
+        cbStkName.setText("Stock Name");
+
+        cbLoc.setText("Location");
+
+        cbRemarks.setText("Remarks");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -146,19 +149,19 @@ public class StockInventoryView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTotalQty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(145, 145, 145))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel7)
                                         .addGap(109, 109, 109)
                                         .addComponent(jScrollPane1))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addGap(87, 87, 87)
-                                        .addComponent(datePicker1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel5)
                                         .addGap(68, 68, 68)
@@ -172,51 +175,65 @@ public class StockInventoryView extends javax.swing.JFrame {
                                         .addGap(86, 86, 86)
                                         .addComponent(txtName))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel2)
                                             .addComponent(jLabel9))
                                         .addGap(110, 110, 110)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtYear)
-                                            .addComponent(lblStockId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                            .addComponent(lblStockId, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel1))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(18, 18, 18)
-                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblTotalQty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(148, 148, 148))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnAdd)
+                                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cbRemarks)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(cbYear)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(cbStkName)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(cbLoc))))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(jLabel1)
-                .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSearch)
+                            .addComponent(cbYear)
+                            .addComponent(cbStkName)
+                            .addComponent(cbLoc))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(cbRemarks))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
                             .addComponent(lblStockId))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel3))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtYear, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel3)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -226,52 +243,40 @@ public class StockInventoryView extends javax.swing.JFrame {
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cbLocation, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(datePicker1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnAdd)
-                        .addGap(50, 50, 50)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnUpdate))
                     .addComponent(jLabel7)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addComponent(lblTotalQty, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(218, 218, 218)
+                        .addGap(130, 130, 130)
                         .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 16, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 37, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void datePicker1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datePicker1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_datePicker1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,17 +325,25 @@ public class StockInventoryView extends javax.swing.JFrame {
         txtQty.setText(s);
     }
     
+    public void setStockLoc(String s){
+        for (int i = 0; i < cbLocation.getItemCount(); i++){
+            if (cbLocation.getItemAt(i).toString().equalsIgnoreCase(s)){
+                cbLocation.setSelectedIndex(i);
+            }
+        }
+    }
+    
     public void setRemark(String s){
         txtRemarks.setText(s);
     }
     
-    public void setTotalQty(String s){
-        lblTotalQty.setText(s);
+    public void setTotalQty(int s){
+        lblTotalQty.setText(String.valueOf(s));
     }
     
     public void setStockList(String idx, String year, String name, String qty, String location, String date, String remarks){
         DefaultTableModel model = (DefaultTableModel) tblStockList.getModel();
-        model.addRow(new Object[]{idx,year,name,qty,location,date,remarks});
+        model.addRow(new Object[]{idx,year,name,qty,location,remarks,date});
     }
     
     public void setStockId(String s){
@@ -338,30 +351,60 @@ public class StockInventoryView extends javax.swing.JFrame {
     }
     
     public String getYear(){
+        if (txtYear.getText().equalsIgnoreCase("")){
+            return "false";
+        }
         return txtYear.getText();
     }
     
     public String getStockName(){
+        if (txtName.getText().equalsIgnoreCase("")){
+            return "false";
+        }
         return txtName.getText();
     }
     
     public String getQty(){
+        if (txtQty.getText().equalsIgnoreCase("")){
+            return "false";
+        }
         return txtQty.getText();
     }
     
     public String getStockLocation(){
+        if (cbLocation.getSelectedIndex()== 0){
+            return "false";
+        }
         return cbLocation.getSelectedItem().toString();
     }
     
-    public String getDateAdd(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        
-        String newDate = format.format(datePicker1.getDate());
-        return newDate;
-    }
     
     public String getRemarks(){
+        if (txtRemarks.getText().equalsIgnoreCase("")){
+            return "false";
+        }
         return txtRemarks.getText();
+    }
+    
+    public String getStockId(){
+        return lblStockId.getText();
+    }
+    
+    public void getSelectedRecord(){
+        DefaultTableModel model = (DefaultTableModel) tblStockList.getModel();
+        int selectedRec = tblStockList.getSelectedRow();
+        String idx = model.getValueAt(selectedRec, 0).toString();
+        String year = model.getValueAt(selectedRec, 1).toString();
+        String name = model.getValueAt(selectedRec, 2).toString();
+        String qty = model.getValueAt(selectedRec, 3).toString();
+        String loc = model.getValueAt(selectedRec, 4).toString();
+        String rem = model.getValueAt(selectedRec, 5).toString();
+        this.setStockId(idx);
+        this.setYear(year);
+        this.setStockName(name);
+        this.setQty(qty);
+        this.setStockLoc(loc);
+        this.setRemark(rem);
     }
     
     public void resetForm(){
@@ -372,8 +415,58 @@ public class StockInventoryView extends javax.swing.JFrame {
         cbLocation.setSelectedIndex(0);
         txtRemarks.setText("");
         lblTotalQty.setText("0");
+        clearStockList();
+    }
+    
+    public void clearStockList(){
         DefaultTableModel model = (DefaultTableModel) tblStockList.getModel();
         model.setRowCount(0);
+    }
+    
+    public void showPopUp(String infoMessage){
+        JOptionPane.showMessageDialog(null,infoMessage,"Message Box",JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public Boolean isChkBoxYearChecked(){
+        return cbYear.isSelected();
+    }
+    
+    public Boolean isChkBoxNameChecked(){
+        return cbStkName.isSelected();
+    }
+    
+    public Boolean isChkBoxLocChecked(){
+        return cbLoc.isSelected();
+    }
+    
+    public Boolean isChkBoxRemChecked(){
+        return cbRemarks.isSelected();
+    }
+    
+    public ArrayList<String> getSelectedCheckBox(){
+        ArrayList<String> chkBoxes = new ArrayList<>();
+        if (isChkBoxYearChecked()){
+            chkBoxes.add("year");
+        }
+        if (isChkBoxNameChecked()){
+            chkBoxes.add("name");
+        }
+        if (isChkBoxLocChecked()){
+            chkBoxes.add("loc");
+        }
+        if (isChkBoxRemChecked()){
+            chkBoxes.add("rem");
+        }
+        return chkBoxes;
+    }
+    
+    public ArrayList<String> getFilterParams(){
+        ArrayList<String> params = new ArrayList<>();
+        params.add(getYear());
+        params.add(getStockName());
+        params.add(getStockLocation());
+        params.add(getRemarks());
+        return params;
     }
     
     public void addSearchButtonListener(ActionListener listenForSearchButton){
@@ -398,14 +491,16 @@ public class StockInventoryView extends javax.swing.JFrame {
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JCheckBox cbLoc;
     private javax.swing.JComboBox<String> cbLocation;
-    private org.jdesktop.swingx.JXDatePicker datePicker1;
+    private javax.swing.JCheckBox cbRemarks;
+    private javax.swing.JCheckBox cbStkName;
+    private javax.swing.JCheckBox cbYear;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
