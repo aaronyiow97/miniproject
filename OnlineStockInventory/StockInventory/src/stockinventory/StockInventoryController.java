@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
@@ -23,9 +24,6 @@ import org.json.simple.JSONObject;
 public class StockInventoryController {
     private StockInventoryView view;
     private StockInventoryModel model;
-//    private static String dbUrl = "jdbc:mysql://110.4.45.47:3306/chazhiji_stockinventory?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC";
-//    private static String dbUser = "chazhiji_adminaaron";
-//    private static String dbPwd = "NeV@ran97";
     private static String dbUrl = "jdbc:mysql://localhost:3306/chazhiji_stockinventory?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC";
     private static String dbUser = "root";
     private static String dbPwd = "";
@@ -38,6 +36,24 @@ public class StockInventoryController {
         this.view.addUpdateButtonListener(new UpdateButtonListener());
         this.view.addEditButtonListener(new EditButtonListener());
         
+        //set stock list table
+        ArrayList<JSONObject> stocks = new ArrayList<>();
+        JSONObject stockList = new JSONObject();
+        stockList = model.getStockList();
+        stocks = (ArrayList<JSONObject>) stockList.get("stocks");
+        for (JSONObject stock : stocks){
+            String idx = stock.get("id").toString();
+            String year = stock.get("year").toString();
+            String code = stock.get("code").toString();
+            String name = stock.get("name").toString();
+            String qty = stock.get("qty").toString();
+            String loc = stock.get("loc").toString();
+            String rem = stock.get("rem").toString();
+            String date = stock.get("date").toString();
+            view.setStockList(idx, year,code, name, qty, loc, date, rem);
+        }
+        view.hideTotalQty();
+        
         
     }
 
@@ -46,6 +62,7 @@ public class StockInventoryController {
         public void actionPerformed(ActionEvent arg0) {
             String idx = view.getStockId();
             String year = view.getYear();
+            String code = view.getStkCode();
             String name = view.getStockName();
             String qty = view.getQty();
             String loc = view.getStockLocation();
@@ -56,6 +73,9 @@ public class StockInventoryController {
             try {
                 if (year.equalsIgnoreCase("false")){
                     throw new Exception("Please input stock year");
+                }
+                if (code.equalsIgnoreCase("false")){
+                    throw new Exception("Please input stock code");
                 }
                 if (name.equalsIgnoreCase("false")){
                     throw new Exception("Please input stock name");
@@ -69,10 +89,26 @@ public class StockInventoryController {
                 if (rem.equalsIgnoreCase("false")){
                     throw new Exception("Please input remarks");
                 }
-                success = model.updateStock(idx, year, name, qty, loc, rem, date);
+                success = model.updateStock(idx, year,code,name, qty, loc, rem, date);
                 if (success){
                     view.showPopUp("Successfully update record!");
                     view.resetForm();
+                    //update stock list
+                    ArrayList<JSONObject> stocks = new ArrayList<>();
+                    JSONObject stockList = new JSONObject();
+                    stockList = model.getStockList();
+                    stocks = (ArrayList<JSONObject>) stockList.get("stocks");
+                    for (JSONObject stock : stocks){
+                        idx = stock.get("id").toString();
+                        year = stock.get("year").toString();
+                        code = stock.get("code").toString();
+                        name = stock.get("name").toString();
+                        qty = stock.get("qty").toString();
+                        loc = stock.get("loc").toString();
+                        rem = stock.get("rem").toString();
+                        date = stock.get("date").toString();
+                        view.setStockList(idx, year, code, name, qty, loc, date, rem);
+                    }
                 }
                 else{
                     throw new Exception("Failed to update record!");
@@ -98,6 +134,7 @@ public class StockInventoryController {
         public void actionPerformed(ActionEvent arg0) {
            String param = "";
            String idx = "";
+           String code = "";
            String year = "";
            String name = "";
            String qty = "";
@@ -105,41 +142,59 @@ public class StockInventoryController {
            String rem = "";
            String date = "";
            int totalQty = 0;
+           
            ArrayList<JSONObject> stocks = new ArrayList<>();
            JSONObject stockList = new JSONObject();
            view.clearStockList();
+           
            ArrayList<String> checkBoxes = view.getSelectedCheckBox();
            ArrayList<String> params = view.getFilterParams();
+           
             try {
+                //normal search without any filter
                 if (checkBoxes.isEmpty()){
                     stockList = model.getStockList();
                     stocks = (ArrayList<JSONObject>) stockList.get("stocks");
                     for (JSONObject stock : stocks){
                         idx = stock.get("id").toString();
                         year = stock.get("year").toString();
+                        code = stock.get("code").toString();
                         name = stock.get("name").toString();
                         qty = stock.get("qty").toString();
                         loc = stock.get("loc").toString();
                         rem = stock.get("rem").toString();
                         date = stock.get("date").toString();
-                        view.setStockList(idx, year, name, qty, loc, date, rem);
+                        view.setStockList(idx, year, code, name, qty, loc, date, rem);
                     }
+                    view.hideTotalQty();
                 }
                 else {
+                    //search with filter
                     stockList = model.getStockList(checkBoxes,params);
                     stocks = (ArrayList<JSONObject>) stockList.get("stocks");
                     for (JSONObject stock : stocks){
                         idx = stock.get("id").toString();
                         year = stock.get("year").toString();
+                        code = stock.get("code").toString();
                         name = stock.get("name").toString();
                         qty = stock.get("qty").toString();
                         loc = stock.get("loc").toString();
                         rem = stock.get("rem").toString();
                         date = stock.get("date").toString();
-                        view.setStockList(idx, year, name, qty, loc, date, rem);
+                        view.setStockList(idx, year, code, name, qty, loc, date, rem);
                         totalQty += Integer.parseInt(qty);
                     }
                     view.setTotalQty(totalQty);
+                    
+                    //if the search filter is not available 
+                    //same like normal search
+                    int occurence = Collections.frequency(params, "false");
+                    if (occurence != params.size()){
+                        view.showTotalQty();
+                    }
+                    else{
+                        view.hideTotalQty();
+                    }
                 }
                 
             } catch (SQLException ex) {
@@ -156,6 +211,7 @@ public class StockInventoryController {
 
         public void actionPerformed(ActionEvent arg0) {
             String year = view.getYear();
+            String code = view.getStkCode();
             String name = view.getStockName();
             String qty = view.getQty();
             String loc = view.getStockLocation();
@@ -166,6 +222,9 @@ public class StockInventoryController {
             try {
                 if (year.equalsIgnoreCase("false")){
                     throw new Exception("Please input stock year");
+                }
+                if (code.equalsIgnoreCase("false")){
+                    throw new Exception("Please input stock code");
                 }
                 if (name.equalsIgnoreCase("false")){
                     throw new Exception("Please input stock name");
@@ -179,10 +238,35 @@ public class StockInventoryController {
                 if (rem.equalsIgnoreCase("false")){
                     throw new Exception("Please input remarks");
                 }
-                success = model.insertNewStock(year, name, qty, loc, rem, date);
+                success = model.insertNewStock(year, code, name, qty, loc, rem, date);
                 if (success){
                     view.showPopUp("Successfully add record!");
                     view.resetForm();
+                    //update the stock list
+                    String idx = "";
+                    year = "";
+                    code = "";
+                    name = "";
+                    qty = "";
+                    loc = "";
+                    rem = "";
+                    date = "";
+                    ArrayList<JSONObject> stocks = new ArrayList<>();
+                    JSONObject stockList = new JSONObject();
+                    stockList = model.getStockList();
+                    stocks = (ArrayList<JSONObject>) stockList.get("stocks");
+                    for (JSONObject stock : stocks){
+                        idx = stock.get("id").toString();
+                        year = stock.get("year").toString();
+                        code = stock.get("code").toString();
+                        name = stock.get("name").toString();
+                        qty = stock.get("qty").toString();
+                        loc = stock.get("loc").toString();
+                        rem = stock.get("rem").toString();
+                        date = stock.get("date").toString();
+                        view.setStockList(idx, year, code ,name, qty, loc, date, rem);
+                    }
+                    
                 }
                 else{
                     throw new Exception("Failed to add record!");
